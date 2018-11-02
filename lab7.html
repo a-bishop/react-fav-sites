@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>ICS211 - Lab 7</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
+  .faveSites {
+    display: flex;
+    flex-direction: column;
+    max-width: 750px;
+    font-weight: bold;
+    font-family: Courier New;
+    background-color: gainsboro;
+    box-shadow: 0px 0px 5px #666;
+    padding: 0.7em;
+    font-size: 120%;
+  }
+  .submitButton {
+    background-color: ghostwhite;
+    width: 100px;
+    color: black;
+    font-size: 12pt;
+    padding: 0.3em;
+    font-weight: bold;
+  }
+  fieldset {
+    border: 1px solid black;
+  }
+  .topicList {
+    display: grid;
+    grid-auto-rows: auto;
+    grid-gap: 5px;
+    width: 200px;
+  }
+  .topicList label:nth-child(even) {
+    background-color: ivory;
+  }
+  .topicList label:nth-child(odd) {
+    background-color: beige;
+  }
+  </style>
+</head>
+
+<body>
+
+  <div id="container">
+  </div>
+
+  <script type="text/babel">
+  
+    const Title = () => {
+        const titleStyle = {
+          textAlign: "center",
+          color: "#2c2e33",
+          fontVariant: "small-caps"
+        }
+
+        return (
+          <div> 
+            <h2 style={titleStyle}>Websites To Learn About <br/>Your Favourite Web Dev Topics</h2>
+          </div>
+        )
+  }
+  
+
+    const SiteComponent = (props) => {
+      if (props.checked) {
+        return (
+          <li style={{color: props.color}}>
+          {props.site}: <a href={props.href}>{props.site}</a>
+          </li>
+        )
+      }
+      else {
+        return null
+      }
+    }
+
+    class FavSites extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          sites: []
+        };
+      }
+
+      componentDidMount() {
+        fetch('http://localhost:3000/sites')
+        .then(response=> this.handleHTTPErrors(response))
+        .then(response=> response.json())
+        .then(result=> {
+          this.setState({
+            sites: result
+          });
+        })
+        .catch(error=> {
+          console.log(error);
+        });
+      }
+
+      handleHTTPErrors(response) {
+        if (!response.ok) throw Error(response.status +
+          ': ' + response.statusText);
+        return response;
+      }
+
+      render() {
+
+        return (
+          <div className='faveSites'>
+            { <ol>
+                <Title />
+                {this.state.sites.map(site=> 
+                  <SiteComponent key={site.id} site={site.name} href={site.link} color={site.color} checked={site.checked} />
+                )}           
+              </ol>
+            }
+          </div>
+        )
+      }
+    }
+
+    class FavSitesForm extends React.Component {
+      constructor(props) {
+        super(props);
+        this.handleSiteSelect = this.handleSiteSelect.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+          checkboxGroup: [ false, false, false, false, false, false, false ],
+          showForm: true
+        }
+      }
+
+      handleSiteSelect(event) {
+        let checkboxes = this.state.checkboxGroup.slice();
+        console.log(checkboxes);
+        checkboxes[event.target.value] = event.target.checked;
+        this.setState({
+          checkboxGroup: checkboxes
+        });
+      }
+
+      handleSubmit(event) {
+        event.preventDefault();
+        console.log(this.state.checkboxGroup.entries());
+        for (let [i, val] of this.state.checkboxGroup.entries()) {
+          if (val === true) {
+            let id = i + 1;
+            fetch(`http://localhost:3000/sites/${id}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                "checked": true
+              })
+            })
+            .then(response=> this.handleHTTPErrors(response))
+            .then(result=> {
+              this.setState({
+                showForm: false
+              });
+            })
+            .catch(error=> {
+              console.log(error);
+            });
+          } else {
+            let id = i + 1;
+            fetch(`http://localhost:3000/sites/${id}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                "checked": false
+              })
+            })
+            .then(response=> this.handleHTTPErrors(response))
+            .then(result=> {
+              this.setState({
+                showForm: false
+              });
+            })
+            .catch(error=> {
+              console.log(error);
+            });
+          }
+        }
+      }
+
+      handleHTTPErrors(response) {
+        if (!response.ok) throw Error(response.status +
+          ': ' + response.statusText);
+        return response;
+      }
+
+      render() {
+
+        if ( this.state.showForm ) {
+          return (
+            <form onSubmit={this.handleSubmit} className='faveSites'>
+              <fieldset>
+              <legend><h3>Select your favourite web development topics:</h3></legend>
+              <div className='topicList'>
+                  <label>
+                    <input type='checkbox' name='checkboxGroup' value='0'
+                      checked={this.state.checkboxGroup[0]}
+                      onChange={this.handleSiteSelect} />
+                    &nbsp;React
+                  <br />
+                  </label>
+                <label>
+                    <input type='checkbox' name='checkboxGroup' value='1'
+                      checked={this.state.checkboxGroup[1]}
+                      onChange={this.handleSiteSelect} />
+                    &nbsp;Node
+                <br />
+                </label>
+                <label>
+                    <input type='checkbox' name='checkboxGroup' value='2'
+                      checked={this.state.checkboxGroup[2]}
+                      onChange={this.handleSiteSelect} />
+                    &nbsp;The DOM
+                <br />
+                </label>
+                <label>
+                    <input type='checkbox' name='checkboxGroup' value='3'
+                      checked={this.state.checkboxGroup[3]}
+                      onChange={this.handleSiteSelect} />
+                    &nbsp;CSS Flexbox
+                <br />
+                </label>
+                <label>
+                    <input type='checkbox' name='checkboxGroup' value='4'
+                      checked={this.state.checkboxGroup[4]}
+                      onChange={this.handleSiteSelect} />
+                    &nbsp;CSS Grid
+                <br />
+                </label>
+                <label>
+                    <input type='checkbox' name='checkboxGroup' value='5'
+                      checked={this.state.checkboxGroup[5]}
+                      onChange={this.handleSiteSelect} />
+                    &nbsp;Docker
+                <br />
+                </label>
+                <label>
+                    <input type='checkbox' name='checkboxGroup' value='6'
+                      checked={this.state.checkboxGroup[6]}
+                      onChange={this.handleSiteSelect} />
+                    &nbsp;GitHub
+                </label>
+              </div>
+              </fieldset>
+              <div>
+                <br />
+                <input type='submit' value='Submit' className='submitButton'/> 
+              </div>
+            </form>
+          )
+        }
+        else {
+          return (
+            <FavSites />
+          )
+        }
+      }
+    }
+  
+    ReactDOM.render(
+      <FavSitesForm/>,
+      document.getElementById('container')
+    ); 
+    
+
+  </script>
+</body>
+
+</html>

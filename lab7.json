@@ -1,0 +1,53 @@
+{
+  "sites": [
+    {
+      "id": 1,
+      "name": "React",
+      "link": "https://reactjs.org/",
+      "color": "blueviolet",
+      "checked": true
+    },
+    {
+      "id": 2,
+      "name": "Node",
+      "link": "https://nodejs.org/dist/latest-v8.x/docs/api/",
+      "color": "green",
+      "checked": true
+    },
+    {
+      "id": 3,
+      "name": "The DOM",
+      "link": "https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model",
+      "color": "brown",
+      "checked": true
+    },
+    {
+      "id": 4,
+      "name": "CSS Flexbox",
+      "link": "https://css-tricks.com/snippets/css/a-guide-to-flexbox/",
+      "color": "darkslateblue",
+      "checked": true
+    },
+    {
+      "id": 5,
+      "name": "CSS Grid",
+      "link": "https://css-tricks.com/snippets/css/complete-guide-grid/",
+      "color": "darkolivegreen",
+      "checked": true
+    },
+    {
+      "id": 6,
+      "name": "Docker",
+      "link": "https://docs.docker.com/",
+      "color": "indianred",
+      "checked": false
+    },
+    {
+      "id": 7,
+      "name": "GitHub",
+      "link": "https://github.com/",
+      "color": "tomato",
+      "checked": false
+    }
+  ]
+}
