@@ -5,7 +5,7 @@
       "name": "React",
       "link": "https://reactjs.org/",
       "color": "blueviolet",
-      "checked": true
+      "checked": false
     },
     {
       "id": 2,
@@ -26,14 +26,14 @@
       "name": "CSS Flexbox",
       "link": "https://css-tricks.com/snippets/css/a-guide-to-flexbox/",
       "color": "darkslateblue",
-      "checked": true
+      "checked": false
     },
     {
       "id": 5,
       "name": "CSS Grid",
       "link": "https://css-tricks.com/snippets/css/complete-guide-grid/",
       "color": "darkolivegreen",
-      "checked": true
+      "checked": false
     },
     {
       "id": 6,

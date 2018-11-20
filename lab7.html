@@ -65,10 +65,10 @@
             <h2 style={titleStyle}>Websites To Learn About <br/>Your Favourite Web Dev Topics</h2>
           </div>
         )
-  }
+    }
   
 
-    const SiteComponent = (props) => {
+    const Site = (props) => {
       if (props.checked) {
         return (
           <li style={{color: props.color}}>
@@ -85,12 +85,13 @@
       constructor(props) {
         super(props);
         this.state = {
-          sites: []
+          sites: [],
+          checkboxGroup: this.props.checkboxGroup
         };
       }
 
       componentDidMount() {
-        fetch('http://localhost:3000/sites')
+        fetch('https://my-json-server.typicode.com/a-bishop/react-fav-sites/sites')
         .then(response=> this.handleHTTPErrors(response))
         .then(response=> response.json())
         .then(result=> {
@@ -115,8 +116,12 @@
           <div className='faveSites'>
             { <ol>
                 <Title />
-                {this.state.sites.map(site=> 
-                  <SiteComponent key={site.id} site={site.name} href={site.link} color={site.color} checked={site.checked} />
+                {this.state.sites.map((site, index) => {
+                  let check = this.state.checkboxGroup[index];
+                  return (
+                    <Site key={site.id} site={site.name} href={site.link} color={site.color} checked={check} />
+                  )
+                }
                 )}           
               </ol>
             }
@@ -147,48 +152,22 @@
 
       handleSubmit(event) {
         event.preventDefault();
-        console.log(this.state.checkboxGroup.entries());
+        console.log(this.state.checkboxGroup);
         for (let [i, val] of this.state.checkboxGroup.entries()) {
           if (val === true) {
-            let id = i + 1;
-            fetch(`http://localhost:3000/sites/${id}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                "checked": true
-              })
+            let checkboxes = this.state.checkboxGroup.slice();
+            checkboxes[i] = true;
+            this.setState({
+              checkboxGroup: checkboxes,
+              showForm: false
             })
-            .then(response=> this.handleHTTPErrors(response))
-            .then(result=> {
-              this.setState({
-                showForm: false
-              });
-            })
-            .catch(error=> {
-              console.log(error);
-            });
           } else {
-            let id = i + 1;
-            fetch(`http://localhost:3000/sites/${id}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                "checked": false
-              })
+            let checkboxes = this.state.checkboxGroup.slice();
+            checkboxes[i] = false;
+            this.setState({
+              checkboxGroup: checkboxes,
+              showForm: false
             })
-            .then(response=> this.handleHTTPErrors(response))
-            .then(result=> {
-              this.setState({
-                showForm: false
-              });
-            })
-            .catch(error=> {
-              console.log(error);
-            });
           }
         }
       }
@@ -266,14 +245,14 @@
         }
         else {
           return (
-            <FavSites />
+            <FavSites {...this.state}/>
           )
         }
       }
     }
   
     ReactDOM.render(
-      <FavSitesForm/>,
+      <FavSitesForm />,
       document.getElementById('container')
     ); 
     
