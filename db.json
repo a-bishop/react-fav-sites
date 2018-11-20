@@ -12,14 +12,14 @@
       "name": "Node",
       "link": "https://nodejs.org/dist/latest-v8.x/docs/api/",
       "color": "green",
-      "checked": true
+      "checked": false
     },
     {
       "id": 3,
       "name": "The DOM",
       "link": "https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model",
       "color": "brown",
-      "checked": true
+      "checked": false
     },
     {
       "id": 4,
