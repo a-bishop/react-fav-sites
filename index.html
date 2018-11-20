@@ -151,7 +151,7 @@
         for (let [i, val] of this.state.checkboxGroup.entries()) {
           if (val === true) {
             let id = i + 1;
-            fetch(`http://andrewnbishop.com/react-fav-sites/${id}`, {
+            fetch(`https://andrewnbishop.com/react-fav-sites/sites/${id}`, {
               method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json'
@@ -171,7 +171,7 @@
             });
           } else {
             let id = i + 1;
-            fetch(`http://andrewnbishop.com/react-fav-sites/${id}`, {
+            fetch(`https://andrewnbishop.com/react-fav-sites/sites/${id}`, {
               method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json'
