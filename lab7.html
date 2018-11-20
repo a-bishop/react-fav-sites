@@ -90,7 +90,7 @@
       }
 
       componentDidMount() {
-        fetch('http://localhost:3000/sites')
+        fetch('https://my-json-server.typicode.com/a-bishop/react-fav-sites/sites')
         .then(response=> this.handleHTTPErrors(response))
         .then(response=> response.json())
         .then(result=> {
